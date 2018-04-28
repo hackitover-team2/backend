@@ -3,7 +3,6 @@ const app = express();
 const request = require('request');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const _ = require('underscore');
 const logger = require('morgan');
 const fs = require('fs');
 
@@ -21,7 +20,6 @@ mongoose.connection.on('connected', function () {
 
   endpoints.forEach(endpoint => {
     var route = require(endpointPath + endpoint);
-    console.log(endpoint.split('.')[0]);
     app.use('/' + endpoint.split('.')[0], route);
   });
 

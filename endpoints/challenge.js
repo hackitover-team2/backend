@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const _ = require('underscore');
 
 var Challenge = require('../model/challenge');
 
