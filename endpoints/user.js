@@ -17,9 +17,7 @@ function updateUser(req, res, user) {
   if (body.telemetricsId) user.telemetricsId = body.telemetricsId;
   user.save(function (err) {
     if (err) res.send(err);
-    else res.json({
-      message: 'user updated'
-    });
+    else res.json(user);
   });
 }
 
