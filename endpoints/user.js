@@ -13,6 +13,7 @@ function updateUser(req, res, user) {
   user.city = req.body.city;
   user.country = req.body.country;
   user.telephone = req.body.telephone;
+  user.telemetricsId = req.body.telemetricsId;
   user.save(function (err) {
     if (err) res.send(err);
     else res.json({
@@ -27,9 +28,9 @@ function createUser(req, res) {
 }
 
 router.post('/', function (req, res) {
-  User.find({email: req.body.email}, function(err, user) {
+  User.findOne({email: req.body.email}, function(err, user) {
     if (err) res.send(err);
-    if (user.length === 0) createUser(req, res);
+    if (!user) createUser(req, res); 
     else updateUser(req, res, user);
   });
 });
