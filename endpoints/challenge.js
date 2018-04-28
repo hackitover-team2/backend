@@ -73,7 +73,7 @@ router.post('/close/', function (req, res) {
     getDriverScores(function (err, scores) {
       if (err) return req.statusCode(500).json(err);
 
-      const compare = (a, b, comp) => comp === 'low' ? a < b : a > b;
+      const compare = (a, b, comp) => (comp === 'low') ? a > b : a < b;
       var best = scores.reduce((prev, curr) => compare(prev[property], curr[property], optimum) ? prev : curr);
 
       console.log(best);
@@ -115,11 +115,32 @@ router.post('/participate', function (req, res) {
 
           });
 
-        } else res.json({ message: 'challenge already accepted'} );
+        } else res.json({ message: 'challenge already accepted' });
 
       });
 
     }
+  });
+});
+
+router.post('/leaderboard/', function (req, res) {
+  var challengeId = req.body.challenge;
+  Challenge.findOne({ _id: challengeId }, function (err, challenge) {
+
+    var property = challenge.goal.property;
+    var optimum = challenge.goal.highOrLow;
+
+    getDriverScores(function (err, scores) {
+      if (err) return req.statusCode(500).json(err);
+
+      var source = scores.map(s => Object.assign({}, _.pick(s, property, 'drivername')));
+
+      const compare = (a, b, comp) => (comp === 'low') ? a > b : a < b;
+      source = source.sort((a, b) => compare(a[property], b[property], optimum));
+
+      res.json(source);
+    });
+
   });
 });
 
