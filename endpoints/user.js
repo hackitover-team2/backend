@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 var User = require('../model/user');
+const telematix = require('../external/telematix');
 
 function updateUser(req, res, user) {
   var body = req.body;
@@ -42,5 +43,27 @@ router.get('/', function(req, res) {
     }
   });
 });
+
+router.get('/score', function(req, res) {
+  User.findOne({email: req.query.email}, function(err, user) {
+    if (err) res.send(err);
+    else {
+      // user.telemetricsId;
+      
+      telematix.getDriverScores(function (err, scores) {
+        if (err) return req.statusCode(500).json(err);
+
+        const byID = (element) => element.driverno==user.telemetricsId;
+
+        console.log(scores);
+        var userIndex = scores.findIndex(byID);
+        res.json(scores[userIndex]);
+      });
+
+
+    }
+  });
+});
+
 
 module.exports = router;
