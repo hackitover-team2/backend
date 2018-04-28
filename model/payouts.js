@@ -1,6 +1,6 @@
-var settings = require('../settings');
+const settings = require('../settings');
 
-function createPayouts(user, req, res) {
+function createPayouts(user, challenge, req, res) {
   var options = {
     method: 'POST',
     url: settings.payouts.url,
@@ -10,18 +10,20 @@ function createPayouts(user, req, res) {
       'Content-Type': 'application/json'
     },
     body: {
-      paymentProfileId: '7dy2ie6q6oekb7idvsb5fm6r',
+      recipientText: 'Siegprämie: ' + challenge.name,
+      paymentProfileId: user.paymentProfileId,
       amount: {
-        currency: 'EUR'
+        currency: 'EUR',
+        amount: challenge.price.amount.toFixed(2) + '',
       },
       language: 'de',
       dueAt: '2018-04-29T14:35:33.274740859Z',
       contactMethod: 'Export',
       securityQuestions: [{
-        question: 'What was the name of your first pet?',
-        answer: 'Oscar'
+        question: 'Wer ist der Held deiner Jugend?',
+        answer: 'Batman'
       }],
-      remittanceInfo: 'Lorem Ipsum'
+      remittanceInfo: 'DROOVE Preisgeld'
     },
     json: true
   };
@@ -38,17 +40,10 @@ function createPayouts(user, req, res) {
     country: user.country,
     telephone: user.telephone
   };
-  options.body.recipientText = req.body.text;
-  options.body.amount.amount = req.body.amount;
-
 
   request(options, function (err, response, body) {
-    if (err) res.json({
-      err: err
-    });
-    else res.json({
-      message: 'ok'
-    });
+    if (err) res.status(500).json(err);
+    else res.json({ message: 'ok' });
   });
 }
 
@@ -60,27 +55,6 @@ function getPayouts(user, req, res) {
       'Cache-Control': 'no-cache',
       bearer: settings.payouts.token,
       'Content-Type': 'application/json'
-    },
-    body: {
-      paymentProfileId: 'jtnwfmiutuyse5ih6gn4esjg',
-      amount: {
-        amount: '0.00',
-        currency: 'EUR'
-      },
-      language: 'de',
-      recipientText: 'Refund order #1000000001',
-      fallbackBankAccount: {
-        accountHolder: 'John',
-        iban: 'DE53834987777715948888',
-        bic: 'BIWYYYYYXXX'
-      },
-      dueAt: '2016-02-08T14:35:33.274740859Z',
-      contactMethod: 'Export',
-      securityQuestions: [{
-        question: 'What was the name of your first pet?',
-        answer: 'Oscar'
-      }],
-      remittanceInfo: 'Lorem Ipsum'
     },
     json: true
   };
@@ -98,12 +72,8 @@ function getPayouts(user, req, res) {
   };
 
   request(options, function (err, response, body) {
-    if (err) res.json({
-      err: err
-    });
-    else res.json({
-      message: 'ok'
-    });
+    if (err) res.status(500).json(err);
+    else res.json({ message: 'ok' });
   });
 }
 

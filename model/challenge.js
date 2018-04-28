@@ -13,7 +13,16 @@ var ChallengeSchema   = new Schema({
         highOrLow: String
     },
     participants: Array,
-    price: String,
+    price: {
+        currency: {
+            type: String,
+            default: 'EUR',
+        },
+        amount: {
+            type: Number,
+            default: 0
+        }
+    },
     closed: { type: Boolean, default: false }
 });
 

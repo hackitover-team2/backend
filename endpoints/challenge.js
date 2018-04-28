@@ -1,10 +1,18 @@
+var settings = require('../settings');
+
+// dependencies
+
 const express = require('express');
 const router = express.Router();
 const _ = require('underscore');
 const request = require('request');
 
+// models
+
 var Challenge = require('../model/challenge');
-var settings = require('../settings');
+var User = require('../model/user');
+
+// external
 
 function getDriverScores(callback) {
   var options = {
@@ -72,17 +80,31 @@ router.post('/close/', function (req, res) {
   });
 });
 
-router.post('/participant', function (req, res) {
-  Challenge.find({_id: 'req.body.id_challenge'}, function(err, challenge) {
+router.post('/participate', function (req, res) {
+  Challenge.findOne({ _id: req.body.challenge }, function (err, challenge) {
     if (err) res.send(err);
     else {
-      challenge.participants.push(req.body.id_participant);
-      challenge.save(function(err) {
-        if (err) res.send(err);
-        else res.json({
-          message: 'challenge created'
-        });
+
+      User.findOne({ email: req.body.email }, function (err2, user) {
+
+        if (challenge.participants.indexOf(user._id) === -1) {
+
+          challenge.participants.push(user._id);
+          challenge.save(function (err) {
+            if (err) return res.status(500).send(err);
+
+            user.participatingChallenges.push(challenge._id);
+            user.save(function (err) {
+              if (err) res.status(500).send(err);
+              else res.json({ message: 'challenge accepted' });
+            });
+
+          });
+
+        } else res.json({ message: 'challenge already accepted'} );
+
       });
+
     }
   });
 });
