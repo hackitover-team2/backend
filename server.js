@@ -4,11 +4,13 @@ const request = require('request');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const _ = require('underscore');
+const logger = require('morgan');
 const fs = require('fs');
 
 var Challenge = require('./model/challenge');
 var User = require('./model/user');
 
+app.use(logger('dev'));
 app.use(bodyParser.json());
 
 mongoose.connection.on('connected', function () {
@@ -23,8 +25,8 @@ mongoose.connection.on('connected', function () {
     app.use('/' + endpoint.split('.')[0], route);
   });
 
-  app.listen(3000, function () {
-    console.log('Example app listening on port 3000!');
+  app.listen(8080, function () {
+    console.log('Example app listening on port 8080!');
   });
 });
 
