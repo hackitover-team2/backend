@@ -5,5 +5,6 @@ module.exports = {
   },
   telemetrics: {
     token: '',
+    password: '',
   }
 }

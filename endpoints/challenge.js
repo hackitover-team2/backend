@@ -14,7 +14,7 @@ function getDriverScores(callback) {
       lang: 'eng',
       account: 'CM-Test',
       username: 'API',
-      password: 'szoNsmAo$Lf6paB',
+      password: settings.telemetrics.password,
       apikey: settings.telemetrics.token,
       outputformat: 'json',
       action: 'showOptiDriveIndicator',
