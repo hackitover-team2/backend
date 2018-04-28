@@ -7,7 +7,6 @@ const _ = require('underscore');
 const logger = require('morgan');
 const fs = require('fs');
 
-var Challenge = require('./model/challenge');
 var User = require('./model/user');
 
 app.use(logger('dev'));
@@ -22,6 +21,7 @@ mongoose.connection.on('connected', function () {
 
   endpoints.forEach(endpoint => {
     var route = require(endpointPath + endpoint);
+    console.log(endpoint.split('.')[0]);
     app.use('/' + endpoint.split('.')[0], route);
   });
 

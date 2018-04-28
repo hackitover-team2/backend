@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+var Challenge = require('../model/challenge');
+
 router.get('/', function (req, res) {
   Challenge.find(function (err, challenges) {
     if (err) res.send(err);
