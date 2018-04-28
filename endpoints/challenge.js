@@ -12,6 +12,8 @@ const request = require('request');
 var Challenge = require('../model/challenge');
 var User = require('../model/user');
 
+var createPayouts = require('../model/payouts').createPayouts;
+
 // external
 
 function getDriverScores(callback) {
@@ -73,8 +75,20 @@ router.post('/close/', function (req, res) {
 
       const compare = (a, b, comp) => comp === 'low' ? a < b : a > b;
       var best = scores.reduce((prev, curr) => compare(prev[property], curr[property], optimum) ? prev : curr);
-      
-      res.send(best);
+
+      console.log(best);
+
+      User.findOne({ telemetricsId: best.driverno }, function (err, user) {
+        if (err) return res.status(500).send(err);
+        if (!user) return res.status(400).send('Winning user does not exist');
+
+        user.wonChallenges.push(challenge._id);
+        user.save(function (err) {
+          if (err) return res.status(500).json(err);
+
+          createPayouts(user, req, res);
+        });
+      });
     });
 
   });

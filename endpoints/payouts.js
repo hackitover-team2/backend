@@ -7,17 +7,6 @@ var User = require('../model/user');
 var createPayouts = require('../model/payouts').createPayouts;
 var getPayouts = require('../model/payouts').getPayouts;
 
-router.post('/', function (req, res) {
-  User.find({
-    email: req.body.email
-  }, function (err, user) {
-    if (err) console.log(err);
-    else {
-      createPayouts(user, req, res);
-    }
-  });
-});
-
 router.get('/', function (req, res) {
   User.find({
     email: req.body.email
