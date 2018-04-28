@@ -97,6 +97,7 @@ router.post('/close/', function (req, res) {
 router.post('/participate', function (req, res) {
   Challenge.findOne({ _id: req.body.challenge }, function (err, challenge) {
     if (err) res.send(err);
+    else if (!challenge) res.send('no challenge called ' + req.body.challenge);
     else {
 
       User.findOne({ email: req.body.email }, function (err2, user) {
