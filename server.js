@@ -11,6 +11,12 @@ var User = require('./model/user');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 mongoose.connection.on('connected', function () {
 
   var endpointPath = './endpoints/';
@@ -23,8 +29,8 @@ mongoose.connection.on('connected', function () {
     app.use('/' + endpoint.split('.')[0], route);
   });
 
-  app.listen(8080, function () {
-    console.log('Example app listening on port 8080!');
+  app.listen(80, function () {
+    console.log('Example app listening on port 80!');
   });
 });
 

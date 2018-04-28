@@ -10,7 +10,8 @@ var UserSchema = new Schema({
   postalCode: String,
   city: String,
   country: String,
-  telephone: String
+  telephone: String,
+  wonChallenge: Array
 });
 
 module.exports = mongoose.model('User', UserSchema);
