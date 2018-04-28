@@ -4,20 +4,21 @@ const router = express.Router();
 var User = require('../model/user');
 
 function updateUser(req, res, user) {
-  user.firstName = req.body.firstName;
-  user.lastName = req.body.lastName;
-  user.email = req.body.email;
-  user.address = req.body.address;
-  user.additionalAddress = req.body.additionalAddress;
-  user.postalCode = req.body.postalCode;
-  user.city = req.body.city;
-  user.country = req.body.country;
-  user.telephone = req.body.telephone;
-  user.telemetricsId = req.body.telemetricsId;
+  var body = req.body;
+  if (body.firstName) user.firstName = body.firstName;
+  if (body.lastName) user.lastName = body.lastName;
+  if (body.email) user.email = body.email;
+  if (body.address) user.address = body.address;
+  if (body.additionalAddress) user.additionalAddress = body.additionalAddress;
+  if (body.postalCode) user.postalCode = body.postalCode;
+  if (body.city) user.city = body.city;
+  if (body.country) user.country = body.country;
+  if (body.telephone) user.telephone = body.telephone;
+  if (body.telemetricsId) user.telemetricsId = body.telemetricsId;
   user.save(function (err) {
     if (err) res.send(err);
     else res.json({
-      message: 'user created'
+      message: 'user updated'
     });
   });
 }
@@ -36,10 +37,10 @@ router.post('/', function (req, res) {
 });
 
 router.get('/', function(req, res) {
-  User.find({email: req.body.email}, function(err, user) {
+  User.findOne({email: req.query.email}, function(err, user) {
     if (err) res.send(err);
     else {
-
+      res.json(user);
     }
   });
 });
