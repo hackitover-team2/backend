@@ -72,4 +72,19 @@ router.post('/close/', function (req, res) {
   });
 });
 
+router.post('/participant', function (req, res) {
+  Challenge.find({_id: 'req.body.id_challenge'}, function(err, challenge) {
+    if (err) res.send(err);
+    else {
+      challenge.participants.push(req.body.id_participant);
+      challenge.save(function(err) {
+        if (err) res.send(err);
+        else res.json({
+          message: 'challenge created'
+        });
+      });
+    }
+  });
+});
+
 module.exports = router;
