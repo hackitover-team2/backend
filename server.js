@@ -23,8 +23,8 @@ mongoose.connection.on('connected', function () {
     app.use('/' + endpoint.split('.')[0], route);
   });
 
-  app.listen(8080, function () {
-    console.log('Example app listening on port 8080!');
+  app.listen(80, function () {
+    console.log('Example app listening on port 80!');
   });
 });
 
