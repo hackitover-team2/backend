@@ -1,21 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const _ = require('underscore');
 
 var User = require('../model/user');
 const telematix = require('../external/telematix');
 
 function updateUser(req, res, user) {
   var body = req.body;
-  if (body.firstName) user.firstName = body.firstName;
-  if (body.lastName) user.lastName = body.lastName;
-  if (body.email) user.email = body.email;
-  if (body.address) user.address = body.address;
-  if (body.additionalAddress) user.additionalAddress = body.additionalAddress;
-  if (body.postalCode) user.postalCode = body.postalCode;
-  if (body.city) user.city = body.city;
-  if (body.country) user.country = body.country;
-  if (body.telephone) user.telephone = body.telephone;
-  if (body.telemetricsId) user.telemetricsId = body.telemetricsId;
+  _.keys(body).filter(e => {if (e !== 'email') return e;}).forEach(e => {user[e] = body[e];});
   user.save(function (err) {
     if (err) res.send(err);
     else res.json(user);
